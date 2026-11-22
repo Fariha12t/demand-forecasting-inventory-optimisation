@@ -1,0 +1,21 @@
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+*.egg-info/
+.ipynb_checkpoints/
+mlflow.db
+mlruns/
+.Rhistory
+.RData
+.Rproj.user/
+# data & generated artefacts (regenerate with `make all`)
+data/raw/*
+data/processed/*
+outputs/*
+models/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!outputs/.gitkeep
+!models/.gitkeep
+.env

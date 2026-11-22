@@ -1,0 +1,44 @@
+# docker compose up --build                      -> API :8000, dashboard :8501, MLflow :5000, Postgres :5432
+# docker compose --profile jobs run --rm pipeline -> (re)build data + train + write outputs/models
+# docker compose --profile jobs run --rm r-forecast  (optional R models; run BEFORE the pipeline's train step)
+x-app: &app
+  build: .
+  volumes: ["./data:/app/data", "./outputs:/app/outputs", "./models:/app/models"]
+  environment:
+    DATABASE_URL: postgresql+psycopg2://forecast:forecast@postgres:5432/forecast
+    MLFLOW_TRACKING_URI: http://mlflow:5000
+
+services:
+  postgres:
+    image: postgres:16
+    environment: {POSTGRES_USER: forecast, POSTGRES_PASSWORD: forecast, POSTGRES_DB: forecast}
+    ports: ["5432:5432"]
+    volumes: ["pgdata:/var/lib/postgresql/data"]
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:latest
+    command: mlflow server --host 0.0.0.0 --port 5000 --backend-store-uri sqlite:///mlflow/mlflow.db --default-artifact-root /mlflow/artifacts
+    ports: ["5000:5000"]
+    volumes: ["mlflowdata:/mlflow"]
+  api:
+    <<: *app
+    ports: ["8000:8000"]
+    depends_on: [postgres]
+  dashboard:
+    <<: *app
+    command: streamlit run dashboard/app.py --server.port 8501 --server.address 0.0.0.0
+    ports: ["8501:8501"]
+  pipeline:
+    <<: *app
+    profiles: [jobs]
+    command: python -m demand_forecasting.pipeline run-all
+    depends_on: [postgres, mlflow]
+  retrain:                 # schedule weekly with cron / k8s CronJob: monitors drift, retrains only if needed
+    <<: *app
+    profiles: [jobs]
+    command: python -m demand_forecasting.pipeline retrain
+    depends_on: [postgres, mlflow]
+  r-forecast:
+    build: {context: ., dockerfile: docker/Dockerfile.r}
+    profiles: [jobs]
+    volumes: ["./data:/app/data", "./outputs:/app/outputs"]
+volumes: {pgdata: {}, mlflowdata: {}}

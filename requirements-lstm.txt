@@ -1,0 +1,2 @@
+# Optional: only needed for the LSTM model (models.lstm.enabled: true)
+torch>=2.1

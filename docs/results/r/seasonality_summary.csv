@@ -1,0 +1,8 @@
+metric,value
+trend_strength,0.323696477753695
+weekly_seasonality_strength,0.837616213856743
+yearly_seasonality_strength,0.337389329096219
+adf_p_value_level,0.01
+adf_p_value_diff,0.01
+kpss_p_value_level,0.01
+ljung_box_p_remainder_lag14,0
