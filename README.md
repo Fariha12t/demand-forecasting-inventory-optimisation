@@ -50,6 +50,38 @@ anomaly detector precision ~71% / recall ~29% (spikes 50%, zero-drops ~0% - drop
 from noise); inventory back-test shows lowest *forecast error* does not automatically mean lowest *inventory cost* in one
 28-day window (bias and calibration matter) - treat those differences as indicative.
 
+## Dashboard screenshots
+
+Streamlit dashboard (`streamlit run dashboard/app.py`), running on the synthetic dataset.
+
+### Overview
+![Overview KPIs](docs/screenshots/01-overview-kpis.png)
+![Stockout risk and highest-risk SKUs](docs/screenshots/02-overview-risk-chart.png)
+![Highest-risk SKU-locations with recommended orders](docs/screenshots/03-highest-risk-table.png)
+
+### Forecast
+![28-day forecast](docs/screenshots/04-forecast.png)
+![Back-test on the held-out test window](docs/screenshots/05-backtest.png)
+
+### Inventory recommendations
+![Replenishment recommendation](docs/screenshots/06-inventory-recommendation.png)
+![All SKU-locations](docs/screenshots/07-all-sku-locations.png)
+
+### Model comparison
+![Validation and test metrics](docs/screenshots/08-model-comparison-tables.png)
+![WAPE by model](docs/screenshots/09-model-comparison-chart.png)
+![Inventory back-test](docs/screenshots/10-inventory-backtest.png)
+![Feature importance](docs/screenshots/11-feature-importance.png)
+
+### Price analysis and what-if
+![Price elasticity by department](docs/screenshots/12-price-elasticity.png)
+![What-if price change or promotion](docs/screenshots/13-what-if.png)
+
+### Monitoring and anomalies
+![Input drift (PSI)](docs/screenshots/14-monitoring-drift.png)
+![Weekly WAPE](docs/screenshots/15-weekly-wape.png)
+![Detected anomalies](docs/screenshots/16-anomalies.png)
+
 ## Quick start
 
 ```bash
